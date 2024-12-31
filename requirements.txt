@@ -1,0 +1,10 @@
+djangorestframework
+python-decouple
+psycopg2-binary
+celery
+redis
+pytelegrambotapi
+pyqt5
+docker
+pytest
+
