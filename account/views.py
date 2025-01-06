@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import action
 
 from .models import CustomUser
-from .serializers import RegisterSerializer, LoginSerializer, CustomUserSerializer
+from .serializers import RegisterSerializer, LoginSerializer, CustomUserSerializer, ProfileSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -68,3 +68,17 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'detail': 'Logout successful'}, status=HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response({'detail': str(e)}, status=HTTP_400_BAD_REQUEST)
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return CustomUser.objects.filter(user=self.request.user)
+        if self.request.user.is_staff:
+            return CustomUser.objects.all()
+    def get_permissions(self):
+        if self.action == 'delete':
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated()]

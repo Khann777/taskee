@@ -122,3 +122,17 @@ class ChangeEmailSerializer(serializers.Serializer):
         user.save()
         return user
 
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'avatar', 'bio', 'date_joined', )
+        read_only_fields = ('id', 'date_joined')
+
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.avatar = validated_data.get('avatar', instance.avatar)
+        instance.bio = validated_data.get('bio', instance.bio)
